@@ -4,37 +4,32 @@ import org.locationtech.jts.geom.Geometry;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Random;
 
 @Entity
-public class Precinct {
+public class CensusBlock {
+
     private Long id;
     private String name;
-    private Long districtId;
     private Long stateId;
+    private Long districtId;
+    private Long PrecinctId;
     private Population population;
     private List<Election> electionResult;
-    private List<Precinct> neighbors;
+    private List<CensusBlock> neighbors;
     private Geometry geometry;
-    private boolean split;
     private boolean border;
-    private List<CensusBlock> borderBlocks;
 
-    public Precinct() {
-    }
-
-    public Precinct(Long id, String name, Long districtId, Long stateId, Population population, List<Election> electionResult, List<Precinct> neighbors, Geometry geometry, boolean split, boolean border, List<CensusBlock> censusBlocks) {
+    public CensusBlock(Long id, String name, Long stateId, Long districtId, Long precinctId, Population population, List<Election> electionResult, List<CensusBlock> neighbors, Geometry geometry, boolean border) {
         this.id = id;
         this.name = name;
-        this.districtId = districtId;
         this.stateId = stateId;
+        this.districtId = districtId;
+        PrecinctId = precinctId;
         this.population = population;
         this.electionResult = electionResult;
         this.neighbors = neighbors;
         this.geometry = geometry;
-        this.split = split;
         this.border = border;
-        this.censusBlocks = censusBlocks;
     }
 
     public String getName() {
@@ -45,6 +40,14 @@ public class Precinct {
         this.name = name;
     }
 
+    public Long getStateId() {
+        return stateId;
+    }
+
+    public void setStateId(Long stateId) {
+        this.stateId = stateId;
+    }
+
     public Long getDistrictId() {
         return districtId;
     }
@@ -53,12 +56,12 @@ public class Precinct {
         this.districtId = districtId;
     }
 
-    public Long getStateId() {
-        return stateId;
+    public Long getPrecinctId() {
+        return PrecinctId;
     }
 
-    public void setStateId(Long stateId) {
-        this.stateId = stateId;
+    public void setPrecinctId(Long precinctId) {
+        PrecinctId = precinctId;
     }
 
     @OneToOne
@@ -82,11 +85,11 @@ public class Precinct {
 
     @Column
     @OneToMany
-    public List<Precinct> getNeighbors() {
+    public List<CensusBlock> getNeighbors() {
         return neighbors;
     }
 
-    public void setNeighbors(List<Precinct> neighbors) {
+    public void setNeighbors(List<CensusBlock> neighbors) {
         this.neighbors = neighbors;
     }
 
@@ -98,14 +101,6 @@ public class Precinct {
         this.geometry = geometry;
     }
 
-    public boolean isSplit() {
-        return split;
-    }
-
-    public void setSplit(boolean split) {
-        this.split = split;
-    }
-
     public boolean isBorder() {
         return border;
     }
@@ -114,14 +109,7 @@ public class Precinct {
         this.border = border;
     }
 
-    @Column
-    @OneToMany
-    public List<CensusBlock> getCensusBlocks() {
-        return censusBlocks;
-    }
-
-    public void setCensusBlocks(List<CensusBlock> censusBlocks) {
-        this.censusBlocks = censusBlocks;
+    public CensusBlock() {
     }
 
     public void setId(Long id) {
@@ -132,15 +120,4 @@ public class Precinct {
     public Long getId() {
         return id;
     }
-
-
-    public CensusBlock randomBorderCB(){//TODO: add by Ziyue
-        Random rand = new Random();
-        int upperbound = borderBlocks.size();
-        int randomNum = rand.nextInt(upperbound);
-        return borderBlocks.get(randomNum);
-    }
-
-
-
 }
